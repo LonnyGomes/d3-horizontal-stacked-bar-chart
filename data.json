@@ -1,0 +1,18 @@
+[
+    { "year": 2017, "state": "AL", "val1": 552, "val2": 259, "val3": 310 },
+    { "year": 2017, "state": "AK", "val1": 856, "val2": 421, "val3": 520 },
+    { "year": 2017, "state": "AZ", "val1": 828, "val2": 362, "val3": 515 },
+    { "year": 2017, "state": "AR", "val1": 343, "val2": 157, "val3": 202 },
+    { "year": 2017, "state": "CA", "val1": 449, "val2": 215, "val3": 270 },
+    { "year": 2017, "state": "CO", "val1": 587, "val2": 261, "val3": 358 },
+    { "year": 2017, "state": "CT", "val1": 403, "val2": 196, "val3": 211 },
+    { "year": 2017, "state": "DE", "val1": 794, "val2": 474, "val3": 593 },
+    { "year": 2018, "state": "AL", "val1": 310, "val2": 552, "val3": 259 },
+    { "year": 2018, "state": "AK", "val1": 520, "val2": 556, "val3": 421 },
+    { "year": 2018, "state": "AZ", "val1": 515, "val2": 828, "val3": 362 },
+    { "year": 2018, "state": "AR", "val1": 202, "val2": 343, "val3": 157 },
+    { "year": 2018, "state": "CA", "val1": 270, "val2": 449, "val3": 215 },
+    { "year": 2018, "state": "CO", "val1": 358, "val2": 587, "val3": 261 },
+    { "year": 2018, "state": "CT", "val1": 211, "val2": 403, "val3": 196 },
+    { "year": 2018, "state": "DE", "val1": 593, "val2": 994, "val3": 474 }
+]
