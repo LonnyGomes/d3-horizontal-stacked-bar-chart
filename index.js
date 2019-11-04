@@ -27,12 +27,12 @@ const svg = d3
     .attr('width', svgWidth)
     .attr('height', svgHeight);
 
-const x = d3
-    .scaleBand()
-    .range([margin.left, width - margin.right])
-    .padding(0.1);
+const x = d3.scaleLinear().rangeRound([margin.left, width - margin.right]);
 
-const y = d3.scaleLinear().rangeRound([height - margin.bottom, margin.top]);
+const y = d3
+    .scaleBand()
+    .range([height - margin.bottom, margin.top])
+    .padding(0.1);
 
 const xAxis = svg
     .append('g')
@@ -59,25 +59,25 @@ const update = (inputVal, speed) => {
             return d;
         });
 
-    y.domain([0, d3.max(data, d => sumKeys(d))]).nice();
-
-    svg.selectAll('.y-axis')
-        .transition()
-        .duration(speed)
-        .call(d3.axisLeft(y).ticks(null, 's'));
-
     data.sort(
         d3.select('#sort').property('checked')
             ? (a, b) => b.total - a.total
             : (a, b) => states.indexOf(a.state) - states.indexOf(b.state)
     );
 
-    x.domain(data.map(d => d.state));
+    y.domain(data.map(d => d.state));
+
+    svg.selectAll('.y-axis')
+        .transition()
+        .duration(speed)
+        .call(d3.axisLeft(y).tickSizeOuter(0));
+
+    x.domain([0, d3.max(data, d => sumKeys(d))]).nice();
 
     svg.selectAll('.x-axis')
         .transition()
         .duration(speed)
-        .call(d3.axisBottom(x).tickSizeOuter(0));
+        .call(d3.axisBottom(x).ticks(null, 's'));
 
     const group = svg
         .selectAll('g.layer')
@@ -109,14 +109,13 @@ const update = (inputVal, speed) => {
 
     bars.enter()
         .append('rect')
-        .attr('width', x.bandwidth())
+        .attr('height', y.bandwidth())
         .merge(bars)
         .transition()
         .duration(speed)
-        .attr('x', d => x(d.data.state))
-        .attr('y', d => y(d[1]))
-        // TODO:review this
-        .attr('height', d => y(d[0]) - y(d[1]));
+        .attr('y', d => y(d.data.state))
+        .attr('x', d => x(d[0]))
+        .attr('width', d => x(d[1]) - x(d[0]));
 
     const text = svg.selectAll('.text').data(data, d => d.state);
 
@@ -129,8 +128,8 @@ const update = (inputVal, speed) => {
         .merge(text)
         .transition()
         .duration(speed)
-        .attr('x', d => x(d.state) + x.bandwidth() / 2)
-        .attr('y', d => y(d.total) - 5)
+        .attr('x', d => x(d.total) + 15)
+        .attr('y', d => y(d.state) + y.bandwidth() / 2)
         .text(d => d.total);
 };
 
