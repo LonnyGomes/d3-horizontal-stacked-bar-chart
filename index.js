@@ -59,25 +59,19 @@ const update = (inputVal, speed) => {
             return d;
         });
 
-    // y.domain([0, d3.max(data, d => sumKeys(d))]).nice();
-    y.domain(data.map(d => d.state));
-
-    // svg.selectAll('.y-axis')
-    //     .transition()
-    //     .duration(speed)
-    //     .call(d3.axisLeft(y).ticks(null, 's'));
-    svg.selectAll('.y-axis')
-        .transition()
-        .duration(speed)
-        .call(d3.axisLeft(y).tickSizeOuter(0));
-
     data.sort(
         d3.select('#sort').property('checked')
             ? (a, b) => b.total - a.total
             : (a, b) => states.indexOf(a.state) - states.indexOf(b.state)
     );
 
-    // x.domain(data.map(d => d.state));
+    y.domain(data.map(d => d.state));
+
+    svg.selectAll('.y-axis')
+        .transition()
+        .duration(speed)
+        .call(d3.axisLeft(y).tickSizeOuter(0));
+
     x.domain([0, d3.max(data, d => sumKeys(d))]).nice();
 
     svg.selectAll('.x-axis')
@@ -101,43 +95,42 @@ const update = (inputVal, speed) => {
             return z(d.key);
         });
 
-    // const bars = svg
-    //     .selectAll('g.layer')
-    //     .selectAll('rect')
-    //     .data(
-    //         d => d,
-    //         e => {
-    //             return e.data.state;
-    //         }
-    //     );
+    const bars = svg
+        .selectAll('g.layer')
+        .selectAll('rect')
+        .data(
+            d => d,
+            e => {
+                return e.data.state;
+            }
+        );
 
-    // bars.exit().remove();
+    bars.exit().remove();
 
-    // bars.enter()
-    //     .append('rect')
-    //     .attr('width', x.bandwidth())
-    //     .merge(bars)
-    //     .transition()
-    //     .duration(speed)
-    //     .attr('x', d => x(d.data.state))
-    //     .attr('y', d => y(d[1]))
-    //     // TODO:review this
-    //     .attr('height', d => y(d[0]) - y(d[1]));
+    bars.enter()
+        .append('rect')
+        .attr('height', y.bandwidth())
+        .merge(bars)
+        .transition()
+        .duration(speed)
+        .attr('y', d => y(d.data.state))
+        .attr('x', d => x(d[0]))
+        .attr('width', d => x(d[1]) - x(d[0]));
 
-    // const text = svg.selectAll('.text').data(data, d => d.state);
+    const text = svg.selectAll('.text').data(data, d => d.state);
 
-    // text.exit().remove();
+    text.exit().remove();
 
-    // text.enter()
-    //     .append('text')
-    //     .attr('class', 'text')
-    //     .attr('text-anchor', 'middle')
-    //     .merge(text)
-    //     .transition()
-    //     .duration(speed)
-    //     .attr('x', d => x(d.state) + x.bandwidth() / 2)
-    //     .attr('y', d => y(d.total) - 5)
-    //     .text(d => d.total);
+    text.enter()
+        .append('text')
+        .attr('class', 'text')
+        .attr('text-anchor', 'middle')
+        .merge(text)
+        .transition()
+        .duration(speed)
+        .attr('x', d => x(d.total) + 15)
+        .attr('y', d => y(d.state) + y.bandwidth() / 2)
+        .text(d => d.total);
 };
 
 update(d3.select('#year').property('value'), 0);
